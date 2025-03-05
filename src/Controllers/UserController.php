@@ -3,16 +3,20 @@ namespace HRMS\Controllers;
 
 use HRMS\Controller;
 use HRMS\Services\UserService;
-use HRMS\Validator;
-use HRMS\Models\UserModel;
+use HRMS\Models\ModelFactory;
+use HRMS\Session;
 
 
 class UserController  extends Controller {
     private UserService $user;
-    
+    private  $packageModel;
+    private $session;
 
     public function __construct() {
-        $this->user = new UserService(new UserModel(), new Validator());
+        
+        $this->user = new UserService(ModelFactory::create('UserModel'));
+        
+        $this->session = Session::getInstance();;
         
     }
 
@@ -59,10 +63,12 @@ class UserController  extends Controller {
 
           
             if ($this->user->login($username, $password)) {
-            
-                session_start();
-                $_SESSION['user'] = $username;
-                header('Location: dashboard');
+                
+                if ($this->session->get('role') === 'admin') {
+                    header("Location: adminDashboard");
+                } else {
+                    header("Location: dashboard");
+                }
                 exit;
             } else {
                 $error = $this->user->getErrors();
@@ -75,5 +81,11 @@ class UserController  extends Controller {
     public function login(): void{
       
         $this->render('login');
+    }
+
+    public function logout()
+    {
+        $this->session->destroy();
+        $this->render('login', ['generalMessage' => 'Logout successfully.']);
     }
 }

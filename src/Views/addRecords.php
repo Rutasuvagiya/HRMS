@@ -1,33 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Health Records</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
+
     <div class="health-container">
         <h1>Personal Health Records</h1>
-        <form action="submit_health_record.php" method="POST">
-            <label for="patientName">Patient Name:</label>
-            <input type="text" id="patientName" name="patientName" required>
+        <?php if (!empty($generalMessage)): ?>
+            <p class="general-error"><?= $generalMessage ?></p>
+        <?php endif; ?>
+        <form action="submitHealthRecord" method="POST" enctype="multipart/form-data">
+            <input type="hidden" id="id" name="id" value="<?= ($input['id']??'') ?>">
+            <label for="patient_name">Patient Name:</label>
+            <span class="error"><?= $error['patient_name'] ?? '' ?></span>
+            <input type="text" id="patient_name" name="patient_name" value="<?= htmlspecialchars($input['patient_name']??'') ?>" required>
 
-            <label for="dob">Age:</label>
-            <input type="text" id="age" name="age" required>
+            <label for="age">Age:</label>
+            <span class="error"><?= $error['age'] ?? '' ?></span>
+            <input type="text" id="age" name="age" value="<?= htmlspecialchars($input['age']??'') ?>" required>
 
             <label for="gender">Gender:</label>
-            <input type="radio" name="gender" value="Male" > Male
-            <input type="radio" name="gender" value="Female" > Female
-            <input type="radio" name="gender" value="Other" > Other
+            <span class="error"><?= $error['gender'] ?? '' ?></span>
+            <select name="gender" class="form-dropdown">
+
+                <option value="Male" <?= (isset($input['age']) && $input['gender'] =='Male')?'selected':''; ?> >Male</option>
+                <option value="Female" <?= (isset($input['age']) && $input['gender'] =='Female')?'selected':''; ?>>Female</option>
+                <option value="Other" <?= (isset($input['age']) && $input['gender'] =='Other')?'selected':''; ?>>Other</option>
+            </select>
 
             <label for="allergies">Allergies:</label>
-            <textarea id="allergies" name="allergies"></textarea>
+            <span class="error"><?= $error['allergies'] ?? '' ?></span>
+            <textarea id="allergies" name="allergies"><?= htmlspecialchars($input['allergies']??'') ?></textarea>
 
             <label for="medications">Current Medications:</label>
-            <textarea id="medications" name="medications"></textarea>
+            <span class="error"><?= $error['medications'] ?? '' ?></span>
+            <textarea id="medications" name="medications"><?= htmlspecialchars($input['medications']??'') ?></textarea>
 
-            <label for="emergency-contact">Emergency Contact:</label>
-            <input type="text" id="emergencyContact" name="emergencyContact" required>
+            <label>Attachment (PDF/JPG/PNG): <input type="file" name="attachment" ></label><br>
+            <span class="error"><?= $error['attachment'] ?? '' ?></span>
+            <button type="submit" name="addRecord">Save</button>
+        </form>
+    </div>
+
 
      

@@ -3,17 +3,17 @@
 namespace HRMS\services;
 
 use HRMS\Validator;
-use HRMS\Models\UserModel;
+
 
 class UserService{
-    private $userRepository;
+
     private Validator $validator;
-    private UserModel $userModel;
+    private $userModel;
     private $errors = [];
 
-    public function __construct(UserModel $userModel, Validator $validator) {
+    public function __construct( $userModel) {
         $this->userModel =$userModel;
-        $this->validator = $validator;
+        $this->validator = new Validator();
     }
 
     public function register($username, $email, $password, $confirmPassword) {
@@ -27,13 +27,13 @@ class UserService{
         if (empty($this->validator->getErrors())) {
         
             if ($this->userModel->register($username, $password, $email)) {
-                $error = "User registered successfully! Please login.";
+                $this->errors['generalMessage'] = "User registered successfully! Please login.";
                 return true;
             } else {
-                $error = "Registration failed!";
+                $this->errors['generalMessage'] = "Registration failed!";
                 return false;
             }
-            $this->errors['generalMessage'] = $error;
+           
         }else {
             $error = $this->validator->getErrors(); // Display errors
             $this->errors['error'] = $error;

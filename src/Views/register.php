@@ -6,7 +6,7 @@
     <title>User Registration</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
+<body class="flexbody">
     <div class="registration-container">
         <h2>Create an Account</h2>
         <?php if (!empty($generalMessage)): ?>

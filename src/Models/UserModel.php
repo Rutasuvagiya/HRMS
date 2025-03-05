@@ -2,15 +2,18 @@
 namespace HRMS\Models;
 
 use HRMS\Database\DBConnection;
+use HRMS\Session;
 use PDO;
 
 class UserModel
 {
     private $dbConnection;
+    private $session;
 
     public function __construct(PDO $pdo =null)
     {
         $this->dbConnection =  $pdo != null ?:DBConnection::getInstance();
+        $this->session = Session::getInstance();
     }
 
    
@@ -31,11 +34,18 @@ class UserModel
 
     public function login(string $username, string $password): bool {
        
-        $statement = $this->dbConnection->prepare("SELECT password FROM users WHERE username = :username");
+        $statement = $this->dbConnection->prepare("SELECT id,role, password FROM users WHERE username = :username");
         $statement->execute(['username' => $username]);
         $user = $statement->fetch();
       
-        return $user && password_verify($password, $user['password']);
+        if($user && password_verify($password, $user['password']))
+        {
+            $this->session->set('userID', $user['id']);
+            $this->session->set('role', $user['role']);
+           
+            return true;
+        }
+        return false;
     }
 
     public function isUsernameTaken($username) {

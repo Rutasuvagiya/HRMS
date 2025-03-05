@@ -7,7 +7,7 @@
     <title>User Login</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
+<body class="flexbody">
     <div class="login-container">
         <h2>Login</h2>
         <?php if (!empty($generalMessage)): ?>
@@ -26,5 +26,3 @@
             <p>Don't have an account? <a href="/register">Register here</a></p>
         </form>
     </div>
-</body>
-</html>

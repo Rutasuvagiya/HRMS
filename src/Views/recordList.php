@@ -1,48 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Records Listing</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <div class="container">
+
+    <div class="dashboard-container">
+
         <h1>Health Records</h1>
-        <div class="search-bar">
-            <input type="search" id="search" placeholder="Search records..." aria-label="Search health records">
-        </div>
+        <?php if (!empty($generalMessage)): ?>
+            <p class="general-error"><?= $generalMessage ?></p>
+        <?php endif; ?>
+        <a href="/addRecord">Add new Record</a>
         <table id="records-table">
             <thead>
                 <tr>
                     <th>Patient Name</th>
-                    <th>Date of Birth</th>
-                    <th>Blood Type</th>
+                    <th>Age</th>
+                    <th>Gender</th>
                     <th>Allergies</th>
                     <th>Medications</th>
-                    <th>Emergency Contact</th>
+                    <th>Attachments</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Sample data rows -->
+                <?php foreach ($records as $record): ?>
                 <tr>
-                    <td>John Doe</td>
-                    <td>01/15/1985</td>
-                    <td>O+</td>
-                    <td>Peanuts</td>
-                    <td>Ibuprofen</td>
-                    <td>Jane Doe</td>
+                    <td><?= $record['patient_name'] ?></td>
+                    <td><?= $record['age'] ?></td>
+                    <td><?= $record['gender'] ?></td>
+                    <td><?= $record['allergies'] ?></td>
+                    <td><?= $record['medications'] ?></td>
+                    <td><?php if (!empty($record['attachment'])): ?>
+                        <a href="<?= htmlspecialchars($record['attachment']) ?>" target="_blank">View</a>
+                    <?php else: ?>
+                        No Attachment
+                    <?php endif; ?></td>
+                    <td><a href="/editRecord?id=<?= $record['id'] ?>">Edit</a></td>
                 </tr>
-                <tr>
-                    <td>Mary Smith</td>
-                    <td>03/22/1990</td>
-                    <td>A-</td>
-                    <td>None</td>
-                    <td>None</td>
-                    <td>John Smith</td>
-                </tr>
+                <?php endforeach; ?>
+                
                 <!-- Additional rows can be added here -->
             </tbody>
         </table>
     </div>
-    <script src="script.js"></scri
+

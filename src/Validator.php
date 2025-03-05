@@ -46,6 +46,22 @@ class Validator {
         return true;
     }
 
+    public function isNumber($value): bool{
+        if (is_int($value)) {
+            $this->errors[$label] = "Please enter valid whole number.";
+            return false;
+        }
+        return true;
+    }
+
+    public function isFloatNumber($value): bool{
+        if (is_float($value)) {
+            $this->errors[$label] = "Please enter valid number.";
+            return false;
+        }
+        return true;
+    }
+
     public function validatePassword(string $password, string $confirmPassword, $label1, $label2): bool {
         if (strlen($password) < 6) {
             $this->errors[$label1] = "Password must be at least 6 characters.";
