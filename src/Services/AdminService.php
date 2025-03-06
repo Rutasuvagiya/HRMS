@@ -4,13 +4,24 @@ namespace HRMS\services;
 
 use HRMS\Core\Validator;
 
+/**
+ * Class AdminService
+ * 
+ * Handles admin panel dashboard and log activities for HRMS
+ */
 class AdminService{
     private $userRepository;
     private Validator $validator;
-    private  $adminModel;
-    private  $healthRecordModel;
+    private $adminModel;
+    private $healthRecordModel;
     private $errors = [];
 
+    /**
+     * Constructor to initialize the AdminModel and HealthRecordModel and validator - validate inputs,
+     * 
+     * @param AdminModel $adminModel The Admin model instance.
+     * @param HealthRecordModel $healthRecordModel The Health record model instance.
+     */
     public function __construct( $adminModel, $healthRecordModel) {
         $this->adminModel =$adminModel;
         $this->validator = new Validator();
@@ -18,16 +29,26 @@ class AdminService{
         
     }
 
+    /**
+     * Get Logs of given record ID.
+     * This method is called from ajax and prints html directly in popup in admin panel.
+     * 
+     * @param int $id health record Id
+     * @return string html code with log details
+     */
     public function getRecordLog($id)
     {
+        //Get health record details from given id
         $record = $this->healthRecordModel->getHealthRecordByID($id);
 
+        //If attachment is there add link else print no attachment message in list
         if (!empty($record['attachment'])):
             $attachment = "<a href='". htmlspecialchars($record['attachment']) ."' target='_blank'>View</a>";
         else:
             $attachment =  "No Attachment";
         endif;
 
+        //Convert date into user readable format
         $date = date('Y-m-d H:i:s', strtotime($record['created_at']));
 
          $string= <<<STT

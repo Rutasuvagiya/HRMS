@@ -3,91 +3,124 @@ namespace HRMS\Controllers;
 
 use HRMS\Core\Controller;
 use HRMS\Services\UserService;
-use HRMS\Models\ModelFactory;
+use HRMS\Factories\ModelFactory;
 use HRMS\Core\Session;
 
 
 /**
  * Class UserController
+ * 
  * Handles user authentication and registration in the Health Record Management System.
  */
 class UserController  extends Controller {
-    private UserService $user;
+    private UserService $service;
     private $model;
     private $session;
 
     /**
-     * Constructor to initialize the database connection.
-     * 
-     * @param PDO $database PDO database connection object.
+     * Constructor to initialize the User model using a factory.
+     * and initialize User Service and session.
      */
     public function __construct() {
         
         $this->model = ModelFactory::create('UserModel');
-        $this->user = new UserService($this->model, ModelFactory::create('packageModel'));
+        $this->service = new UserService($this->model);
         $this->session = Session::getInstance();
         
     }
 
+    /**
+     * Get user inputs from register screen and Registers a new user.
+     * 
+     * @return void
+     */
     public function registerUser(): void {
        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
-            
+            //expected inputs labels
             $arrExpected = ['username', 'password', 'email', 'confirmPassword'];
            
+            //Get value of each inputs in variable named label(eg.  $username = 'test')
             foreach($arrExpected as $value)
             {
                 $$value = $_POST[$value]??'';
             }
 
-            if($this->user->register($username, $email, $password, $confirmPassword)) {
-               
-                $message = "User registered successfully! Please login.";
-                $this->render('login', ['generalMessage' => $message]);
-            } else {
-                $error = $this->user->getErrors();
-                $this->render('register', $error);
+            try {
+                //call register function to validate inputs and insert record in db
+                if($this->service->register($username, $email, $password, $confirmPassword)) {
+                
+                    $message = "User registered successfully! Please login.";
+                    $this->render('login', ['generalMessage' => $message]);
+                } else {
+                    $error = $this->service->getErrors();
+                    $this->render('register', $error);
+                }
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
             }
             
         }
        
     }
 
+    /**
+     * Render Registration screen for user inputs
+     * 
+     * @return void
+     */
     public function register(): void{
         $this->render('register');
     }
 
+    /**
+     * get user inputs and Logs in a user and starts a session.
+     * 
+     * @return void
+     */
     public function loginUser(): void {
        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-           
-            $arrRequired = ['username', 'password'];
+            //expected inputs labels
             $arrExpected = ['username', 'password'];
            
+            //Get value of each inputs in variable named label(eg.  $username = 'test')
             foreach($arrExpected as $value)
             {
                 $$value = $_POST[$value]??'';
             }
 
-          
-            if ($this->user->login($username, $password)) {
-                $dashboard = $this->model->getDashboard();
-                header("Location:$dashboard");
-                exit;
-            } else {
-                $error = $this->user->getErrors();
-                
-                $this->render('login', $error);
+            try{
+                //call login function to validate inputs and insert record in db
+                if ($this->service->login($username, $password)) {
+                    $dashboard = $this->model->getDashboard();
+                    header("Location:$dashboard");
+                    exit;
+                } else {
+                    $error = $this->service->getErrors();
+                    $this->render('login', $error);
+                }
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
             }
-        }
-        
+        }  
     }
+
+    /**
+     * Render login screen for user inputs
+     * 
+     * @return void
+     */
     public function login(): void{
-        
         $this->render('login');
     }
 
+    /**
+     * Logs out the user by destroying the session.
+     * 
+     * @return void
+     */
     public function logout()
     {
         $this->session->destroy();

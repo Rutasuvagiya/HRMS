@@ -19,7 +19,10 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Sample data rows -->
+                <?php if(count($records)>0)
+                {
+
+                ?>
                 <?php foreach ($records as $record): ?>
                 <tr>
                     <td><?= $record['patient_name'] ?></td>
@@ -34,7 +37,13 @@
                     <?php endif; ?></td>
                     <td><a href="/editRecord?id=<?= $record['id'] ?>">Edit</a></td>
                 </tr>
-                <?php endforeach; ?>
+                <?php endforeach; 
+                
+                    }
+                    else
+                    {
+                        echo "<tr><td colspan='7' style='text-align: center;'>No Records Found.</td></tr>";
+                    }?>
                 
                 <!-- Additional rows can be added here -->
             </tbody>

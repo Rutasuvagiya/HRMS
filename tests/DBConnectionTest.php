@@ -1,6 +1,6 @@
 <?php
 
-use HRMS\Database\DBConnection;
+use HRMS\Core\DBConnection;
 use PHPUnit\Framework\TestCase;
 
 class DBConnectionTest extends TestCase

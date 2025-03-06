@@ -12,7 +12,7 @@
 
             <label for="age">Age:</label>
             <span class="error"><?= $error['age'] ?? '' ?></span>
-            <input type="text" id="age" name="age" value="<?= htmlspecialchars($input['age']??'') ?>" required>
+            <input type="text"  maxlength="3" id="age" name="age" value="<?= htmlspecialchars($input['age']??'') ?>" required>
 
             <label for="gender">Gender:</label>
             <span class="error"><?= $error['gender'] ?? '' ?></span>

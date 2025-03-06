@@ -1,17 +1,25 @@
 <?php
 namespace HRMS\Controllers;
-use HRMS\Core\Session;
 
+use HRMS\Core\Notifier;
+
+/**
+ * Class NotificationController
+ * 
+ * Used to fetch notifications from session. This will be called from front page header via ajax call.
+ */
 class NotificationController {
-    private $session;
-
-
+  
+    /**
+     * initialize the NotifierObserver and call getNotifications function to retieve notifications.
+     * 
+     * @return void
+     */
     public function getNotifications()
     {
-        $this->session = Session::getInstance();
-        $message = $this->session->get('notifications');
-        $messages = explode(':::', rtrim($message, ':::'));
-        echo json_encode($messages);
+        $notifier = Notifier::getInstance();
+        $notifier->getNotifications();
+        
     }
 
 }

@@ -12,7 +12,7 @@
 
     <div class="container">
     <div class="navbar">
-    <ul><li><a href="/dashboard">Dashboard</a></li>
+    <ul><li><a href="/dashboard">Health Records</a></li>
           <li><a href="/viewMyPackage">View Package Details</a></li>
           <li><a href="/showUpgradeForm">Upgrade Package</a></li></ul>
     

@@ -1,9 +1,10 @@
 <?php
 
-namespace HRMS\Database;
+namespace HRMS\Core;
 
 use PDO;
 use PDOException;
+
 /**
  * Class DBConnection
  *
@@ -63,26 +64,4 @@ class DBConnection
         return self::$instance;
     }
 }
-//$db = DBConnection::getInstance();
 
-/*
-
-// Include the DatabaseConnection class
-//require_once 'DatabaseConnection.php';
-
-// Get the PDO instance
-$db = DBConnection::getInstance();
-
-
-// Use the $db instance for database operations
-// For example, preparing a query
-$query = $db->prepare('SELECT * FROM users');
-$query->execute();
-
-// Fetch results
-$results = $query->fetchAll(PDO::FETCH_ASSOC);
-
-print_r($results);
-
-?>
-*/
