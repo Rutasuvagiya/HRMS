@@ -5,7 +5,7 @@
         <?php if (!empty($generalMessage)): ?>
             <p class="general-error"><?= $generalMessage ?></p>
         <?php endif; ?>
-        <a href="/addRecord">Add new Record</a>
+        <a href="/addRecord" class="linkButton">Add new Record</a><br/><br/>
         <table id="records-table">
             <thead>
                 <tr>

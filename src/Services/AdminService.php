@@ -2,7 +2,7 @@
 
 namespace HRMS\services;
 
-use HRMS\Validator;
+use HRMS\Core\Validator;
 
 class AdminService{
     private $userRepository;

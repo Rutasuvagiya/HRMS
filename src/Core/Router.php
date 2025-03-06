@@ -1,6 +1,6 @@
 <?php
 
-namespace HRMS;
+namespace HRMS\Core;
 
 class Router
 {
@@ -23,6 +23,7 @@ class Router
         $requestPath = trim(parse_url($requestUri, PHP_URL_PATH), '/');
         $requestMethod = strtoupper($requestMethod);
 
+        define('ROOT', dirname(__DIR__).'/');
         foreach ($this->routes as $route) {
             if ($route['method'] === $requestMethod && $route['path'] === $requestPath) {
                 if (is_callable($route['handler'])) {

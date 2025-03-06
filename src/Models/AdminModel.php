@@ -2,7 +2,7 @@
 namespace HRMS\Models;
 
 use HRMS\Database\DBConnection;
-use HRMS\Session;
+use HRMS\Core\Session;
 use PDO;
 
 class AdminModel

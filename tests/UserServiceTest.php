@@ -2,7 +2,7 @@
 use PHPUnit\Framework\TestCase;
 use HRMS\Services\UserService;
 use HRMS\Models\UserModel;
-use HRMS\Validator;
+use HRMS\Core\Validator;
 
 class UserServiceTest extends TestCase {
 

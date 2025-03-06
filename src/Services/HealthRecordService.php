@@ -2,23 +2,30 @@
 
 namespace HRMS\services;
 
-use HRMS\Validator;
+use HRMS\Core\Validator;
+use HRMS\Core\Notifier;
 
 class HealthRecordService{
     private $userRepository;
     private Validator $validator;
     private $healthRecordModel;
+    private $notifier;
+    
     private $errors = [];
 
     public function __construct( $healthRecordModel) {
         $this->HealthRecordModel =$healthRecordModel;
         $this->validator = new Validator();
+        $this->notifier = Notifier::getInstance();
     }
 
     public function submitHealthRecord($id, $patient_name, $age, $gender, $allergies, $medications, $attachment) 
     {
        
         $this->validator->validateRequiredFields(['patient_name'=>$patient_name, 'age'=>$age, 'allergies'=>$allergies]);
+        $this->validator->isFloatNumber($age, 'age');
+        $this->validator->checkInArray($gender, ['Male', 'Female', 'Other'] , 'gender');
+        $this->validator->validateAttachment($_FILES['attachment'], 'attachment');
         
 
         if (empty($this->validator->getErrors())) {
@@ -39,7 +46,8 @@ class HealthRecordService{
               
                 if ($this->HealthRecordModel->updateHealthRecord($id, $patient_name, $age, $gender, $allergies, $medications, $filePath)) {
                 
-                    $this->errors['generalMessage'] = "Data updated successfully.";;
+                    $message = "Health Record updated successfully.";
+                    $this->notifier->addNotification($message);
                     return true;
                 } else {
                     $this->errors['generalMessage'] = "Data updation failed. Please try again.";;
@@ -51,7 +59,8 @@ class HealthRecordService{
                 
                 if ($this->HealthRecordModel->addHealthRecord($patient_name, $age, $gender, $allergies, $medications, $filePath)) {
                 
-                    $this->errors['generalMessage'] = "Data saved successfully.";;
+                    $message = "Health Record inserted successfully.";
+                    $this->notifier->addNotification($message);
                     return true;
                 } else {
                     $this->errors['generalMessage'] = "Data insertion failed. Please try again.";;
@@ -65,48 +74,11 @@ class HealthRecordService{
         }else {
             $error = $this->validator->getErrors(); // Display errors
             $this->errors['error'] = $error;
-            exit; return false;
+             return false;
         }
     }
 
-    private function validateForm($data, $files) {
-        $errors = [];
-
-        if (empty($data['name']) || !preg_match("/^[a-zA-Z\s]+$/", $data['name'])) {
-            $errors['name'] = "Valid name is required.";
-        }
-
-        if (empty($data['age']) || !filter_var($data['age'], FILTER_VALIDATE_INT)) {
-            $errors['age'] = "Valid age is required.";
-        }
-
-        if (!in_array($data['gender'], ["Male", "Female", "Other"])) {
-            $errors['gender'] = "Invalid gender selection.";
-        }
-
-        if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            $errors['email'] = "Valid email is required.";
-        }
-
-        if (empty($data['phone']) || !preg_match("/^[0-9]{10}$/", $data['phone'])) {
-            $errors['phone'] = "Valid 10-digit phone number required.";
-        }
-
-        if (empty($data['diagnosis'])) {
-            $errors['diagnosis'] = "Diagnosis is required.";
-        }
-
-        if (empty($files['attachment']['name'])) {
-            $errors['attachment'] = "File attachment is required.";
-        } else {
-            $allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
-            if (!in_array($files['attachment']['type'], $allowedTypes)) {
-                $errors['attachment'] = "Only PDF, JPG, or PNG files allowed.";
-            }
-        }
-
-        return $errors;
-    }
+   
 
     private function handleFileUpload($file) {
         $uploadDir = "uploads/";

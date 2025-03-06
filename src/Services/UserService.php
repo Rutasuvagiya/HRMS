@@ -2,18 +2,26 @@
 
 namespace HRMS\services;
 
-use HRMS\Validator;
+use HRMS\Core\Validator;
+use HRMS\Core\Notifier;
+use HRMS\Core\Session;
 
 
 class UserService{
 
     private Validator $validator;
     private $userModel;
+    private $packageModel;
+    private $notifier;
     private $errors = [];
+    private $session;
 
-    public function __construct( $userModel) {
+    public function __construct( $userModel, $packageModel) {
         $this->userModel =$userModel;
+        $this->packageModel =$packageModel;
         $this->validator = new Validator();
+        $this->notifier = Notifier::getInstance();
+        $this->session = Session::getInstance();
     }
 
     public function register($username, $email, $password, $confirmPassword) {
@@ -46,6 +54,21 @@ class UserService{
         $this->validator->validateRequiredFields(['username'=>$username, 'password'=>$password]);
         if (empty($this->validator->getErrors())) {
             if ($this->userModel->login($username, $password)) {
+                if($this->session->get('role')=='patient'){
+                    $this->notifier->addNotification("Welcome to the system!");
+
+                    $count = $this->packageModel->getExpiringPackages();
+                    $message = '';
+                   if($count >0):
+                       $message =  "Your package is expiring in next $count days.";
+                   elseif($count === 0):
+                       $message =  "Your package is expiring today.";
+                   elseif($count < 0):
+                       $message =  "Your package is expired.";
+                   endif;
+                   $this->notifier->addNotification($message);
+                }
+                
                 return true;
             }
             else

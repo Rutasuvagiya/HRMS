@@ -2,16 +2,19 @@
 
 namespace HRMS\services;
 
-use HRMS\Validator;
+use HRMS\Core\Validator;
+use HRMS\Core\Notifier;
 
 class PackageService{
     private Validator $validator;
     private $model;
+    private $notifier;
     private $errors = [];
 
     public function __construct( $model) {
         $this->model =$model;
         $this->validator = new Validator();
+        $this->notifier = Notifier::getInstance();
     }
 
     public function savePackage($name, $price, $validity)
@@ -47,7 +50,8 @@ class PackageService{
         $newExpiryDate = date('Y-m-d', strtotime("+$validity day")); // Extending by 30 days
 
         if ($this->model->upgradePackage($userId, $packageId, $startDate, $newExpiryDate)) {
-            echo "Package upgraded successfully!";
+            
+            $this->notifier->addNotification("Package upgraded successfully!");
             header('Location: viewMyPackage');
             exit;
         } else {

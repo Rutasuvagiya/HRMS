@@ -1,10 +1,10 @@
 <?php
 namespace HRMS\Controllers;
 
-use HRMS\Controller;
+use HRMS\Core\Controller;
 use HRMS\Services\PackageService;
 use HRMS\Models\ModelFactory;
-use HRMS\Session;
+use HRMS\Core\Session;
 
 
 class PackageController  extends Controller {

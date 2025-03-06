@@ -1,16 +1,24 @@
 <?php
 namespace HRMS\Controllers;
 
-use HRMS\Controller;
+use HRMS\Core\Controller;
 use HRMS\Services\HealthRecordService;
 use HRMS\Models\ModelFactory;
-use HRMS\Session;
+use HRMS\Core\Session;
+
+use HRMS\Observers\Subject;
+use HRMS\Observers\NotificationSystem;
+use HRMS\Observers\Observer;
+
+use HRMS\Observers\PushNotification;
+
 
 
 class HealthRecordController  extends Controller {
     private HealthRecordService $service;
     private  $packageModel;
     private  $model;
+    private $session;
 
     public function __construct() {
         $this->model = ModelFactory::create('HealthRecordModel');
@@ -46,18 +54,8 @@ class HealthRecordController  extends Controller {
 
     public function getUserWiseHealthRecords()
     {
-        $message = '';
-         $count = $this->packageModel->getExpiringPackages();
-        if($count >0):
-            $message =  "Your package is expiring in next $count days.";
-        elseif($count === 0):
-            $message =  "Your package is expiring today.";
-        elseif($count < 0):
-            $message =  "Your package is expired.";
-        endif;
-
         $healthRecords = $this->model->getUserWiseHealthRecords();
-        $this->render('recordList', ['records'=>$healthRecords, 'generalMessage'=>$message]);
+        $this->render('recordList', ['records'=>$healthRecords]);
     }
 
     public function addRecord(): void{

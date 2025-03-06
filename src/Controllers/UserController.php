@@ -1,22 +1,31 @@
 <?php
 namespace HRMS\Controllers;
 
-use HRMS\Controller;
+use HRMS\Core\Controller;
 use HRMS\Services\UserService;
 use HRMS\Models\ModelFactory;
-use HRMS\Session;
+use HRMS\Core\Session;
 
 
+/**
+ * Class UserController
+ * Handles user authentication and registration in the Health Record Management System.
+ */
 class UserController  extends Controller {
     private UserService $user;
-    private  $packageModel;
+    private $model;
     private $session;
 
+    /**
+     * Constructor to initialize the database connection.
+     * 
+     * @param PDO $database PDO database connection object.
+     */
     public function __construct() {
         
-        $this->user = new UserService(ModelFactory::create('UserModel'));
-        
-        $this->session = Session::getInstance();;
+        $this->model = ModelFactory::create('UserModel');
+        $this->user = new UserService($this->model, ModelFactory::create('packageModel'));
+        $this->session = Session::getInstance();
         
     }
 
@@ -63,12 +72,8 @@ class UserController  extends Controller {
 
           
             if ($this->user->login($username, $password)) {
-                
-                if ($this->session->get('role') === 'admin') {
-                    header("Location: adminDashboard");
-                } else {
-                    header("Location: dashboard");
-                }
+                $dashboard = $this->model->getDashboard();
+                header("Location:$dashboard");
                 exit;
             } else {
                 $error = $this->user->getErrors();
@@ -79,7 +84,7 @@ class UserController  extends Controller {
         
     }
     public function login(): void{
-      
+        
         $this->render('login');
     }
 
@@ -88,4 +93,6 @@ class UserController  extends Controller {
         $this->session->destroy();
         $this->render('login', ['generalMessage' => 'Logout successfully.']);
     }
+
+   
 }

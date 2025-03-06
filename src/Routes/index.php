@@ -1,6 +1,6 @@
 <?php
 
-use HRMS\Router;
+use HRMS\Core\Router;
 
 $router = new Router();
 
@@ -24,6 +24,8 @@ $router->add('POST', 'savePackage', ['PackageController', 'savePackage']);
 $router->add('GET', 'viewMyPackage', ['PackageController', 'getUserPackage']);
 $router->add('POST', 'upgradeMyPackage', ['PackageController', 'upgradePackage']);
 $router->add('GET', 'showUpgradeForm', ['PackageController', 'showUpgradeForm']);
+$router->add('GET', 'getNotifications', ['NotificationController', 'getNotifications']);
+$router->add('GET', 'sendNotification', ['NotificationController', 'sendNotification']);
 
 // Dispatch Request
 $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);

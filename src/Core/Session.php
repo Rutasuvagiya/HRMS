@@ -1,5 +1,5 @@
 <?php
-namespace HRMS;
+namespace HRMS\core;
 
 class Session {
     private static ?Session $instance = null;

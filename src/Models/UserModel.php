@@ -2,12 +2,16 @@
 namespace HRMS\Models;
 
 use HRMS\Database\DBConnection;
-use HRMS\Session;
+use HRMS\Core\Session;
+use HRMS\Core\UserRoleStrategy;
+use HRMS\Core\AdminRole;
+use HRMS\Core\PatientRole;
 use PDO;
 
 class UserModel
 {
     private $dbConnection;
+    private $roleStrategy;
     private $session;
 
     public function __construct(PDO $pdo =null)
@@ -42,7 +46,7 @@ class UserModel
         {
             $this->session->set('userID', $user['id']);
             $this->session->set('role', $user['role']);
-           
+            $this->setRole($user['role']);
             return true;
         }
         return false;
@@ -56,6 +60,33 @@ class UserModel
        // $statement->debugDumpParams();
        
         return $statement->rowCount() > 0 ? true:false;
+    }
+
+     /**
+     * Sets the user's role strategy based on their role.
+     * 
+     * @param string $role User's role from the database.
+     */
+    public function setRole(string $role) {
+        switch ($role) {
+            case 'admin':
+                $this->roleStrategy = new AdminRole();
+                break;
+            case 'patient':
+                $this->roleStrategy = new PatientRole();
+                break;
+            default:
+                throw new \Exception("Invalid role.");
+        }
+    }
+
+    /**
+     * Gets the dashboard file for the assigned role.
+     * 
+     * @return string Dashboard file name.
+     */
+    public function getDashboard() {
+        return $this->roleStrategy->getDashboard();
     }
 }
 ?>

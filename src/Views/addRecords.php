@@ -31,7 +31,7 @@
             <span class="error"><?= $error['medications'] ?? '' ?></span>
             <textarea id="medications" name="medications"><?= htmlspecialchars($input['medications']??'') ?></textarea>
 
-            <label>Attachment (PDF/JPG/PNG): <input type="file" name="attachment" ></label><br>
+            <label>Attachment (PDF/JPG/PNG/GIF): <input type="file" name="attachment" ></label><br>
             <span class="error"><?= $error['attachment'] ?? '' ?></span>
             <button type="submit" name="addRecord">Save</button>
         </form>

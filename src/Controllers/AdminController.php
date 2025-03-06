@@ -1,10 +1,10 @@
 <?php
 namespace HRMS\Controllers;
 
-use HRMS\Controller;
+use HRMS\Core\Controller;
 use HRMS\Services\AdminService;
 use HRMS\Models\ModelFactory;
-use HRMS\Session;
+use HRMS\Core\Session;
 
 
 class AdminController  extends Controller {

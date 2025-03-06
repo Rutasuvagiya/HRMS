@@ -1,5 +1,5 @@
 <?php
-namespace HRMS;
+namespace HRMS\core;
 
 class Validator {
     private array $errors = [];
@@ -47,7 +47,7 @@ class Validator {
     }
 
     public function isNumber($value): bool{
-        if (is_int($value)) {
+        if (!filter_var($int, FILTER_VALIDATE_INT)) {
             $this->errors[$label] = "Please enter valid whole number.";
             return false;
         }
@@ -55,8 +55,8 @@ class Validator {
     }
 
     public function isFloatNumber($value): bool{
-        if (is_float($value)) {
-            $this->errors[$label] = "Please enter valid number.";
+        if (!filter_var($value, FILTER_VALIDATE_INT)) {
+            $this->errors[$label] = "Please enter valid $label.";
             return false;
         }
         return true;
@@ -72,6 +72,44 @@ class Validator {
             return false;
         }
         return true;
+    }
+
+    public function checkInArray($value, $array, $lable)
+    {
+        if (!in_array($value, $array)) {
+            $errors[$lable] = "Invalid $lable selection.";
+        }
+    }
+
+    public function validateAttachment($file, $lable)
+    {
+        if($file['name'] == ''){
+            return true;
+        }
+        // Allowed file types
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'pdf'];
+        $maxFileSize = 2 * 1024 * 1024; // 2MB
+
+        // Extract file details
+         $fileName = basename($file['name']);
+       echo $fileType = mime_content_type($file['tmp_name']);
+        $fileSize = $file['size'];
+        $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+        // Check if file type is allowed
+        if (!in_array($fileType, $allowedTypes) || !in_array($fileExt, $allowedExtensions)) {
+            $this->errors[$lable] = "Invalid file type. Only JPG, PNG, GIF, and PDF are allowed.";
+            return false;
+        }
+
+        // Check file size
+        if ($fileSize > $maxFileSize) {
+            $this->errors[$lable] = "File size must be less than 2MB.";
+            return false;
+        }
+        return true;
+
     }
 
     public function getErrors(): array {
