@@ -59,7 +59,7 @@ class HealthRecordModel {
             //echo $statement->debugDumpParams();
             
         } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
+            return $e->getMessage();
         }
     }
 
@@ -143,7 +143,8 @@ class HealthRecordModel {
         try {
             //If count >0 then set limit
             $limit = $count > 0 ? " LIMIT $count":'';
-            $statement = $this->dbConnection->query("SELECT * FROM healthcare_records ORDER BY created_at desc $limit");
+            $statement = $this->dbConnection->prepare("SELECT * FROM healthcare_records ORDER BY created_at desc $limit");
+            $statement->execute();
             return $records = $statement->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             return "Error: " . $e->getMessage();

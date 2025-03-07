@@ -94,21 +94,21 @@ class HealthRecordModelTest extends TestCase
 
     public function testFetchAllRecords()
     {
-        $expectedRecord[] = array(
-            array('id'         => 1,
+        $expectedRecord = array(
+            ['id'         => 1,
             'patient_id' => 'Test User',
             'age'  => 12,
             'gender'  => 'Male',
             'allergies'  => 'Rest and hydration',
             'medications'  => 'test',
-            'attachment'  => 'filepath'),
-            array('id'         => 2,
+            'attachment'  => 'filepath'],
+            ['id'         => 2,
             'patient_id' => 'Test2 User',
             'age'  => 33,
             'gender'  => 'Female',
             'allergies'  => 'Fever',
             'medications'  => 'Paracetamol',
-            'attachment'  => 'filepath')
+            'attachment'  => 'filepath']
         );
 
         $this->mockStatement->expects($this->once())

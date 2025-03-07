@@ -75,7 +75,7 @@ class Validator {
      * @return bool - Returns true if input is integer
      */
     public function isNumber($value, $label): bool{
-        if (!filter_var($int, FILTER_VALIDATE_INT)) {
+        if (!filter_var($value, FILTER_VALIDATE_INT)) {
             $this->errors[$label] = "Please enter valid whole number.";
             return false;
         }

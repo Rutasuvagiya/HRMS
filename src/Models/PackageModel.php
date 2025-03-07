@@ -23,7 +23,7 @@ class PackageModel
      */
     public function __construct(PDO $pdo =null)
     {
-        $this->dbConnection =  $pdo != null ?:DBConnection::getInstance();
+        $this->dbConnection =  $pdo != null ? $pdo :DBConnection::getInstance();
         $this->session = Session::getInstance();
     }
 
@@ -39,7 +39,7 @@ class PackageModel
             //Check if id is given then add where condition. 
             $where = is_null($id)?'':" where id=$id";
             $query = "SELECT * FROM packages $where";
-            $statement = $this->dbConnection->query($query);
+            $statement = $this->dbConnection->prepare($query);
             
             $statement->execute();
             return $statement->fetchAll(PDO::FETCH_ASSOC);

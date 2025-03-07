@@ -21,10 +21,10 @@ class HealthRecordController  extends Controller {
      * Initialize Health Record Service and session.
      * Check session is valid
      */
-    public function __construct() {
+    public function __construct($sessionMock = null) {
         $this->model = ModelFactory::create('HealthRecordModel');
         $this->service = new HealthRecordService($this->model);
-        $this->session = Session::getInstance();
+        $this->session = $sessionMock != null ?$sessionMock :Session::getInstance();
         $this->session->checkSession(); // Redirects if session is not valid
     }
 
@@ -33,29 +33,28 @@ class HealthRecordController  extends Controller {
      */
     public function submitHealthRecord() {
        
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            //expected inputs labels
-            $arrExpected = ['id', 'patient_name', 'age', 'gender', 'allergies', 'medications'];
-           
-            //Get value of each inputs in variable named label(eg.  $username = 'test')
-            foreach($arrExpected as $value)
-            {
-                $input[$value] = $$value = $_POST[$value]??'';
+        //expected inputs labels
+        $arrExpected = ['id', 'patient_name', 'age', 'gender', 'allergies', 'medications'];
+        
+        //Get value of each inputs in variable named label(eg.  $username = 'test')
+        foreach($arrExpected as $value)
+        {
+            $input[$value] = $$value = $_POST[$value]??'';
+        }
+        try{
+            //call submitHealthRecord function to validate inputs and insert record in db
+            if($this->service->submitHealthRecord($id, $patient_name, $age, $gender, $allergies, $medications, $_FILES['attachment'])) {
+                header('Location: dashboard');
+                exit;
+            } else {
+                $error = $this->service->getErrors();
+                $error['input'] =$input;
+                
+                $this->render('addRecords', $error);
+                return false;
             }
-            try{
-                //call submitHealthRecord function to validate inputs and insert record in db
-                if($this->service->submitHealthRecord($id, $patient_name, $age, $gender, $allergies, $medications, $_FILES['attachment'])) {
-                    header('Location: dashboard');
-                    exit;
-                } else {
-                    $error = $this->service->getErrors();
-                    $error['input'] =$input;
-                    
-                    $this->render('addRecords', $error);
-                }
-            }  catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
-            }
+        }  catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
         }
     }
 
@@ -70,6 +69,7 @@ class HealthRecordController  extends Controller {
             //call getUserWiseHealthRecords function get health records
             $healthRecords = $this->model->getUserWiseHealthRecords();
             $this->render('recordList', ['records'=>$healthRecords]);
+            return true;
         }  catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
@@ -87,7 +87,7 @@ class HealthRecordController  extends Controller {
     /**
      * Get health record inputs from front user with record id to update 
      */
-    public function editRecord(): void{
+    public function editRecord(){
         if(isset($_GET['id']))
         {
             try{
@@ -96,12 +96,15 @@ class HealthRecordController  extends Controller {
                 $error['input'] =$healthRecords;
                     
                 $this->render('addRecords', $error);
+                return true;
             }  catch (Exception $e) {
                 echo "Error: " . $e->getMessage();
+                return false;
             }
         }
         else{
         $this->render('404');
+        return false;
         }
     }
 

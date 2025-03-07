@@ -39,8 +39,6 @@ class PackageService{
     {
         //check all the required fields are not empty
         $this->validator->validateRequiredFields(['name'=>$name, 'price'=>$price, 'validity'=>$validity]);
-        //validate name of package
-        $this->validator->validateName($name, 'name');
         //check is validity whole number or not
         $this->validator->isNumber($validity, 'validity');
         //check price is float value
@@ -99,5 +97,15 @@ class PackageService{
         } catch (PDOException $e) {
             return "Error: " . $e->getMessage();
         }
+    }
+
+    /**
+     * return all the errors 
+     * 
+     * @return array list of array
+     */
+    public function getErrors()
+    {
+        return  $this->errors;
     }
 }

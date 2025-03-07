@@ -81,7 +81,7 @@ class HealthRecordServiceTest extends TestCase
             ->willReturn(false);
 
         $result = $this->healthRecordService->submitHealthRecord(1, 'test', 12, 'Male', 'test', '', $_FILES['attachment']);
-        print_r($result);
+      
         $this->assertFalse($result);
     
     }

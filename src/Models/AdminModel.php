@@ -23,7 +23,7 @@ class AdminModel
      */
     public function __construct(PDO $pdo =null)
     {
-        $this->dbConnection =  $pdo != null ?:DBConnection::getInstance();
+        $this->dbConnection =  $pdo != null ? $pdo:DBConnection::getInstance();
         $this->session = Session::getInstance();
     }
 

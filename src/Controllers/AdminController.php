@@ -24,12 +24,12 @@ class AdminController  extends Controller {
      * 
      * @return void
      */
-    public function __construct() {
+    public function __construct($sessionMock = null) {
         $this->healthRecordModel = ModelFactory::create('HealthRecordModel');
         $this->adminModel = ModelFactory::create('AdminModel');
         $this->packageModel = ModelFactory::create('PackageModel');
         $this->service = new AdminService($this->adminModel, $this->healthRecordModel);
-        $this->session = Session::getInstance();
+        $this->session =  $sessionMock != null ?$sessionMock :Session::getInstance();
         $this->session->checkAdminSession();    //If session is not for admin, redirect to front dashboard
         
     }
@@ -48,8 +48,10 @@ class AdminController  extends Controller {
             $packageRecords = $this->packageModel->getPackageList();
             
             $this->render('admin/dashboard', ['records'=>$healthRecords, 'package'=>$packageRecords]);
+            return true;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
+            return false;
         }
     }
 
@@ -65,8 +67,10 @@ class AdminController  extends Controller {
             $packageRecords = $this->packageModel->getPackageList();
             
             $this->render('admin/packageList', ['records'=>$packageRecords]);
+            return true;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
+            return false;
         }
     }
 
@@ -82,8 +86,10 @@ class AdminController  extends Controller {
             $healthRecords = $this->healthRecordModel->getAllRecords(0);
         
             $this->render('admin/viewRecords', ['records'=>$healthRecords]);
+            return true;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
+            return false;
         }
     }
 
