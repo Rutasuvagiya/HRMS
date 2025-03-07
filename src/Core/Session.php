@@ -1,93 +1,78 @@
 <?php
-namespace HRMS\core;
+namespace HRMS\Core;
 
 /**
  * Class Session
- *
- * This class handles session activities 
- * Singleton pattern is applied to this class to restrice multiple instance
- *
+ * Implements Singleton pattern for session management.
  */
 class Session {
     /**
-     * @var Session|null Holds the single instance of the Session class.
+     * @var Session|null The single instance of the class.
      */
     private static ?Session $instance = null;
 
     /**
+     * @var bool Whether session should be started (for testing).
+     */
+    private static bool $testMode = false;
+
+    /**
      * Private constructor to prevent direct instantiation.
-     * Starts a session if not already started.
      */
     private function __construct() {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start(); // Start session if not already started
+        if (!self::$testMode && session_status() === PHP_SESSION_NONE) {
+            @session_start();
         }
     }
 
     /**
-     * Prevents cloning of the singleton instance.
-     */
-    private function __clone() {}
-
-    /**
-     * Prevents unserialization of the singleton instance.
-     */
-    public function __wakeup() {}
-
-    /**
-     * Gets the single instance of the Session class.
-     *
-     * @return Session The Singleton instance.
+     * Gets the singleton instance of Session.
+     * 
+     * @return Session
      */
     public static function getInstance(): Session {
         if (self::$instance === null) {
-            self::$instance = new Session();
+            self::$instance = new self();
         }
         return self::$instance;
     }
 
     /**
-     * Sets a session variable.
-     *
-     * @param string $key The session key.
-     * @param mixed $value The value to store.
-     * @return void
+     * Enables test mode (prevents actual session start).
      */
-    public function set($key, $value) {
+    public static function enableTestMode(): void {
+        self::$testMode = true;
+        self::$instance = null; // Reset instance for testing
+        $_SESSION = []; // Mock session storage
+    }
+
+    /**
+     * Sets a session variable.
+     * 
+     * @param string $key The session key.
+     * @param mixed $value The session value.
+     */
+    public function set( $key, $value): void {
         $_SESSION[$key] = $value;
     }
 
     /**
      * Gets a session variable.
-     *
+     * 
      * @param string $key The session key.
-     * @return mixed|null Returns the value if set, otherwise null.
+     * @return mixed|null The session value or null if not set.
      */
-    public function get($key) {
+    public function get(string $key) {
         return $_SESSION[$key] ?? null;
     }
 
     /**
-     * Removes a session variable.
-     *
-     * @param string $key The session key.
-     * @return void
+     * Destroys the session.
      */
-    public function remove($key) {
-        if (isset($_SESSION[$key])) {
-            unset($_SESSION[$key]);
-        }
-    }
-
-    /**
-     * Destroys the session completely.
-     *
-     * @return void
-     */
-    public function destroy() {
+    public function destroy(): void {
+        $_SESSION = [];
         session_unset();
         session_destroy();
-        self::$instance = null;
     }
 
     /**
@@ -116,4 +101,4 @@ class Session {
         }
     }
 }
-?>
+

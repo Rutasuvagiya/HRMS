@@ -27,7 +27,7 @@ class UserModel
      */
     public function __construct(PDO $pdo =null)
     {
-        $this->dbConnection =  $pdo != null ?:DBConnection::getInstance();
+        $this->dbConnection =  $pdo != null ?$pdo:DBConnection::getInstance();
     }
 
 
@@ -108,6 +108,7 @@ class UserModel
      * @param string $role User's role from the database.
      */
     public function setRole(string $role) {
+       
         switch ($role) {
             case 'admin':
                 $this->roleStrategy = new AdminRole();
@@ -128,5 +129,6 @@ class UserModel
     public function getDashboard() {
         return $this->roleStrategy->getDashboard();
     }
+
 }
 ?>

@@ -77,7 +77,7 @@ class UserService{
                 return false;
             }
         }  catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            return "Error: " . $e->getMessage();
         }
     }
 
@@ -133,6 +133,15 @@ class UserService{
                 echo "Error: " . $e->getMessage();
             }
         }
+    }
+
+     /**
+     * Gets the dashboard file for the assigned role.
+     * 
+     * @return string Dashboard file name.
+     */
+    public function getDashboard() {
+        return $this->userModel->getDashboard();
     }
 
     /**

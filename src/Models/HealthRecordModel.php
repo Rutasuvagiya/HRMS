@@ -25,8 +25,8 @@ class HealthRecordModel {
      */
     public function __construct(PDO $pdo =null)
     {
-        $this->dbConnection =  $pdo != null ?:DBConnection::getInstance();
-        $this->session = Session::getInstance();
+        $this->dbConnection =  $pdo != null ?$pdo:DBConnection::getInstance();
+        $this->session =  Session::getInstance();
     }
 
     /**
@@ -45,6 +45,7 @@ class HealthRecordModel {
             $query = "INSERT INTO healthcare_records (patient_name, age, gender, allergies, medications, attachment,created_by) 
                       VALUES (:name, :age, :gender, :allergies, :medications, :attachment, :created_by)";
 
+            $userId = $this->session->get('userID');
             $statement = $this->dbConnection->prepare($query);
             $statement->bindParam(":name", $patient_name);
             $statement->bindParam(":age", $age);
@@ -52,7 +53,7 @@ class HealthRecordModel {
             $statement->bindParam(":allergies", $allergies);
             $statement->bindParam(":medications", $medications);
             $statement->bindParam(":attachment", $filePath);
-            $statement->bindParam(":created_by", $this->session->get('userID'));
+            $statement->bindParam(":created_by", $userId);
            
              return $statement->execute();
             //echo $statement->debugDumpParams();

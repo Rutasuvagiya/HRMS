@@ -48,15 +48,17 @@ class HealthRecordService{
         $this->validator->validateRequiredFields(['patient_name'=>$patient_name, 'age'=>$age, 'allergies'=>$allergies]);
         $this->validator->isFloatNumber($age, 'age');
         $this->validator->checkInArray($gender, ['Male', 'Female', 'Other'] , 'gender');
-        $this->validator->validateAttachment($_FILES['attachment'], 'attachment');
-        
+        $this->validator->validateAttachment($attachment, 'attachment');
+      
         try{
             if (empty($this->validator->getErrors())) {
                 
                 $filePath = '';
+               
                 //If file is not null, upload file and get file path
-                if(!empty($_FILES['attachment']['name'])){
-                    $filePath = $this->handleFileUpload($_FILES['attachment']);
+                if(!empty($attachment['name'])){
+                 
+                    $filePath = $this->handleFileUpload($attachment);
                     if (!$filePath) {
                         $this->errors['generalMessage'] = "File upload failed. Please try again.";
                         return false;

@@ -13,7 +13,7 @@ use HRMS\Core\Session;
  * Handles user authentication and registration in the Health Record Management System.
  */
 class UserController  extends Controller {
-    private UserService $service;
+    private $service;
     private $model;
     private $session;
 
@@ -21,10 +21,10 @@ class UserController  extends Controller {
      * Constructor to initialize the User model using a factory.
      * and initialize User Service and session.
      */
-    public function __construct() {
-        
+    public function __construct($serviceMock = null) {
         $this->model = ModelFactory::create('UserModel');
-        $this->service = new UserService($this->model);
+        $this->service = !is_null($serviceMock)?$serviceMock:new UserService($this->model);;
+          
         $this->session = Session::getInstance();
         
     }
@@ -34,35 +34,32 @@ class UserController  extends Controller {
      * 
      * @return void
      */
-    public function registerUser(): void {
+    public function registerUser() {
        
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            
-            //expected inputs labels
-            $arrExpected = ['username', 'password', 'email', 'confirmPassword'];
-           
-            //Get value of each inputs in variable named label(eg.  $username = 'test')
-            foreach($arrExpected as $value)
-            {
-                $$value = $_POST[$value]??'';
-            }
-
-            try {
-                //call register function to validate inputs and insert record in db
-                if($this->service->register($username, $email, $password, $confirmPassword)) {
-                
-                    $message = "User registered successfully! Please login.";
-                    $this->render('login', ['generalMessage' => $message]);
-                } else {
-                    $error = $this->service->getErrors();
-                    $this->render('register', $error);
-                }
-            } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
-            }
-            
+        //expected inputs labels
+        $arrExpected = ['username', 'password', 'email', 'confirmPassword'];
+        
+        //Get value of each inputs in variable named label(eg.  $username = 'test')
+        foreach($arrExpected as $value)
+        {
+            $$value = $_POST[$value]??'';
         }
-       
+
+        try {
+            //call register function to validate inputs and insert record in db
+            if($this->service->register($username, $email, $password, $confirmPassword)) {
+            
+                $message = "User registered successfully! Please login.";
+                 $this->render('login', ['generalMessage' => $message]);
+                 return true;
+            } else {
+                $error = $this->service->getErrors();
+                $this->render('register', $error);
+                return false;
+            }
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
     }
 
     /**
@@ -79,32 +76,32 @@ class UserController  extends Controller {
      * 
      * @return void
      */
-    public function loginUser(): void {
+    public function loginUser() {
        
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            //expected inputs labels
-            $arrExpected = ['username', 'password'];
-           
-            //Get value of each inputs in variable named label(eg.  $username = 'test')
-            foreach($arrExpected as $value)
-            {
-                $$value = $_POST[$value]??'';
-            }
+        //expected inputs labels
+        $arrExpected = ['username', 'password'];
+        
+        //Get value of each inputs in variable named label(eg.  $username = 'test')
+        foreach($arrExpected as $value)
+        {
+            $$value = $_POST[$value]??'';
+        }
 
-            try{
-                //call login function to validate inputs and insert record in db
-                if ($this->service->login($username, $password)) {
-                    $dashboard = $this->model->getDashboard();
-                    header("Location:$dashboard");
-                    exit;
-                } else {
-                    $error = $this->service->getErrors();
-                    $this->render('login', $error);
-                }
-            } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
+        try{
+            //call login function to validate inputs and insert record in db
+            if ($this->service->login($username, $password)) {
+                $dashboard = $this->service->getDashboard();
+                header("Location:$dashboard");
+                exit;
+            } else {
+                
+                $error = $this->service->getErrors();
+                 $this->render('login', $error);
+                 return false;
             }
-        }  
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        } 
     }
 
     /**
@@ -125,6 +122,7 @@ class UserController  extends Controller {
     {
         $this->session->destroy();
         $this->render('login', ['generalMessage' => 'Logout successfully.']);
+        return true;
     }
 
    

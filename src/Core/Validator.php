@@ -131,7 +131,7 @@ class Validator {
     public function checkInArray($value, $array, $lable)
     {
         if (!in_array($value, $array)) {
-            $errors[$lable] = "Invalid $lable selection.";
+            $this->errors[$lable] = "Invalid $lable selection.";
         }
     }
 
@@ -145,23 +145,23 @@ class Validator {
     public function validateAttachment($file, $lable)
     {
         //If file name is null- file is not attached then return true
-        if($file['name'] == ''){
+        if(!isset($file) || $file['name'] == ''){
             return true;
         }
         // Allowed file types
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'pdf'];
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'text/plain'];
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'txt'];
         $maxFileSize = 2 * 1024 * 1024; // 2MB
 
         // Extract file details
          $fileName = basename($file['name']);
-       echo $fileType = mime_content_type($file['tmp_name']);
+        $fileType = mime_content_type($file['tmp_name']);
         $fileSize = $file['size'];
         $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
         // Check if file type is allowed
         if (!in_array($fileType, $allowedTypes) || !in_array($fileExt, $allowedExtensions)) {
-            $this->errors[$lable] = "Invalid file type. Only JPG, PNG, GIF, and PDF are allowed.";
+            $this->errors[$lable] = "Invalid file type. Only JPG, PNG, GIF, TXT and PDF are allowed.";
             return false;
         }
 

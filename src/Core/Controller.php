@@ -10,12 +10,12 @@ use HRMS\Core\Session;
  * Base Controller class for the PHP MVC framework.
  * All other controllers should extend this class.
  *
- * @package App\Core
+ * @package HRMS\Core
  */
 class Controller
 {
     private $session;
-    
+ 
     /**
      * Loads a view and passes data to it.
      *
@@ -23,29 +23,30 @@ class Controller
      * @param array $data Data to be extracted and passed to the view.
      * @return void
      */
-    protected function render($view, $data = [])
+    public function render($view, $data = [])
     {
-        $viewPath = ROOT . "Views/" . $view . ".php";
+      
+        $viewPath = dirname(__DIR__).'/' . "Views/" . $view . ".php";
         $this->session = Session::getInstance();
 
         //Check if view file exists or not
         if (file_exists($viewPath)) {
-            extract($data);
+            if(is_array($data)){extract($data);}
             
             //If admin pages, add admin header
             if($this->session->get('role')=='admin')
             {
-                include ROOT . "Views/admin/header.php";
-                include ROOT . "Views/$view.php";
+                include dirname(__DIR__).'/' . "Views/admin/header.php";
+                include dirname(__DIR__).'/' . "Views/$view.php";
             }
             elseif($this->session->get('role')=='patient')  //If patient pages, add common header and footer
             {
-                include ROOT . "Views/header.php";
+                include dirname(__DIR__).'/' . "Views/header.php";
                 include $viewPath;
-                include ROOT . "Views/footer.php";
+                include dirname(__DIR__).'/' . "Views/footer.php";
             }
             else{   // before login pages (registration and login)
-                include ROOT . "Views/$view.php";
+                include dirname(__DIR__).'/' . "Views/$view.php";
             }
 
         } else {

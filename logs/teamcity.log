@@ -1,0 +1,16 @@
+
+##teamcity[testCount count='1' flowId='23996']
+
+##teamcity[testSuiteStarted name='HRMS Test Suite' flowId='23996']
+
+##teamcity[testSuiteStarted name='UserModelTest' locationHint='php_qn://C:\xampp\htdocs\HRMS\tests\UserModelTest.php::\UserModelTest' flowId='23996']
+
+##teamcity[testStarted name='testCanRegisterUser' locationHint='php_qn://C:\xampp\htdocs\HRMS\tests\UserModelTest.php::\UserModelTest::testCanRegisterUser' flowId='23996']
+
+##teamcity[testFailed name='testCanRegisterUser' message='Error : Call to a member function prepare() on bool' details=' C:\xampp\htdocs\HRMS\src\Models\UserModel.php:48|n C:\xampp\htdocs\HRMS\tests\UserModelTest.php:27|n phpvfscomposer://C:\xampp\htdocs\HRMS\vendor\phpunit\phpunit\phpunit:106|n ' duration='71' flowId='23996']
+
+##teamcity[testFinished name='testCanRegisterUser' duration='71' flowId='23996']
+
+##teamcity[testSuiteFinished name='UserModelTest' flowId='23996']
+
+##teamcity[testSuiteFinished name='HRMS Test Suite' flowId='23996']

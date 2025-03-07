@@ -42,7 +42,7 @@ class Router
         $requestPath = trim(parse_url($requestUri, PHP_URL_PATH), '/');
         $requestMethod = strtoupper($requestMethod);
 
-        define('ROOT', dirname(__DIR__).'/');
+        
         foreach ($this->routes as $route) {
             if ($route['method'] === $requestMethod && $route['path'] === $requestPath) {
                 // If the handler is a callable function, execute it

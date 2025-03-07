@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="" tests="1" assertions="0" errors="1" warnings="0" failures="0" skipped="0" time="0.070552">
+    <testsuite name="HRMS Test Suite" tests="1" assertions="0" errors="1" warnings="0" failures="0" skipped="0" time="0.070552">
+      <testsuite name="UserModelTest" file="C:\xampp\htdocs\HRMS\tests\UserModelTest.php" tests="1" assertions="0" errors="1" warnings="0" failures="0" skipped="0" time="0.070552">
+        <testcase name="testCanRegisterUser" class="UserModelTest" classname="UserModelTest" file="C:\xampp\htdocs\HRMS\tests\UserModelTest.php" line="26" assertions="0" time="0.070552">
+          <error type="Error">UserModelTest::testCanRegisterUser
+Error: Call to a member function prepare() on bool
+
+C:\xampp\htdocs\HRMS\src\Models\UserModel.php:48
+C:\xampp\htdocs\HRMS\tests\UserModelTest.php:27
+phpvfscomposer://C:\xampp\htdocs\HRMS\vendor\phpunit\phpunit\phpunit:106</error>
+        </testcase>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>
