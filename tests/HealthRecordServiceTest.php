@@ -33,7 +33,7 @@ class HealthRecordServiceTest extends TestCase
             ->willReturn(true);
 
         $result = $this->healthRecordService->submitHealthRecord($id, $patient_name, $age, $gender, $allergies, $medications, $attachment);
-      
+
         $this->assertTrue($result);
     }
 
@@ -47,22 +47,24 @@ class HealthRecordServiceTest extends TestCase
             ->willReturn(false);
 
         $result = $this->healthRecordService->submitHealthRecord($id, $patient_name, $age, $gender, $allergies, $medications, $attachment);
-      
+
         $this->assertFalse($result);
     }
 
-    public function HealthRecords() {
+    public function HealthRecords()
+    {
         // Mock the uploaded file
-        $_FILES['attachment'] = ['name'=>''];
+        $_FILES['attachment'] = ['name' => ''];
         return [
             // Invalid input
-            
+
             ['','patient1', 12, 'Male', 'Test allergies', 'Test Medication', $_FILES['attachment'] ],
             ['','patient2', 22, 'Female', 'Test allergies1', 'Test Medication1', $_FILES['attachment'] ],
         ];
     }
 
-    public function testFileUpload(){
+    public function testFileUpload()
+    {
         // Create a temporary file for testing
         $tmpFile = tempnam(sys_get_temp_dir(), 'testfile');
         file_put_contents($tmpFile, 'Dummy content'); // Writing sample data
@@ -74,16 +76,15 @@ class HealthRecordServiceTest extends TestCase
             'tmp_name' => $tmpFile,
             'error'    => 0,
             'size'     => filesize($tmpFile),
-        ];
-        
-        $this->healthRecordModelMock
+         ];
+
+         $this->healthRecordModelMock
             ->method('addHealthRecord')
             ->willReturn(false);
 
-        $result = $this->healthRecordService->submitHealthRecord(1, 'test', 12, 'Male', 'test', '', $_FILES['attachment']);
-      
-        $this->assertFalse($result);
-    
+         $result = $this->healthRecordService->submitHealthRecord(1, 'test', 12, 'Male', 'test', '', $_FILES['attachment']);
+
+         $this->assertFalse($result);
     }
 
 
@@ -96,7 +97,7 @@ class HealthRecordServiceTest extends TestCase
 
     public function testEmptyAge()
     {
-        $this->healthRecordService->submitHealthRecord("", "test", "" , 'Male', 'Test allergies', 'Test Medication', $_FILES['attachment']);
+        $this->healthRecordService->submitHealthRecord("", "test", "", 'Male', 'Test allergies', 'Test Medication', $_FILES['attachment']);
         $this->assertArrayHasKey("age", $this->getErrors());
     }
 
@@ -128,7 +129,7 @@ class HealthRecordServiceTest extends TestCase
             ->willReturn(true);
 
         $result = $this->healthRecordService->submitHealthRecord($id, $patient_name, $age, $gender, $allergies, $medications, $attachment);
-     
+
         $this->assertTrue($result);
     }
 
@@ -142,17 +143,18 @@ class HealthRecordServiceTest extends TestCase
             ->willReturn(false);
 
         $result = $this->healthRecordService->submitHealthRecord($id, $patient_name, $age, $gender, $allergies, $medications, $attachment);
-      
+
         $this->assertFalse($result);
     }
 
-    
-    public function UpdateHealthRecords() {
+
+    public function UpdateHealthRecords()
+    {
         // Mock the uploaded file
-        $_FILES['attachment'] = ['name'=>''];
+        $_FILES['attachment'] = ['name' => ''];
         return [
             // Invalid input
-            
+
             [1,'patient1', 12, 'Male', 'Test allergies', 'Test Medication', $_FILES['attachment'] ],
             [2,'patient2', 22, 'Female', 'Test allergies1', 'Test Medication1', $_FILES['attachment'] ],
         ];
@@ -163,5 +165,4 @@ class HealthRecordServiceTest extends TestCase
         $errors = $this->healthRecordService->getErrors();
         return  $errors['error'];
     }
-
 }

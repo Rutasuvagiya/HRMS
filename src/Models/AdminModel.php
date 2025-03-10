@@ -1,4 +1,5 @@
 <?php
+
 namespace HRMS\Models;
 
 use HRMS\Core\DBConnection;
@@ -14,22 +15,21 @@ class AdminModel
 {
     private $dbConnection;
     private $session;
-
-    /**
+/**
      * Constructor to initialize the database connection and session
-     * 
+     *
      * @param PDO $database PDO database connection object.
      * @return void
      */
-    public function __construct(PDO $pdo =null)
+    public function __construct(PDO $pdo = null)
     {
-        $this->dbConnection =  $pdo != null ? $pdo:DBConnection::getInstance();
+        $this->dbConnection =  $pdo != null ? $pdo : DBConnection::getInstance();
         $this->session = Session::getInstance();
     }
 
     /**
      * Fetch logs of health record changes done by front end users
-     * 
+     *
      * @param int $recordId id of health record to get logs
      * @return array set of logs
      */

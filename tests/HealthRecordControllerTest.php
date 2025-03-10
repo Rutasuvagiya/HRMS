@@ -28,7 +28,7 @@ class HealthRecordControllerTest extends TestCase
 
         $this->sessionMock->method('checkSession')
         ->willReturn('true');
-       
+
         // Mock dependencies
         $this->healthRecordServiceMock = $this->createMock(HealthRecordService::class);
 
@@ -48,10 +48,10 @@ class HealthRecordControllerTest extends TestCase
     {
         $this->healthRecordServiceMock->method('submitHealthRecord')->willReturn(false);
 
-        $_FILES['attachment'] = ['name'=>''];
+        $_FILES['attachment'] = ['name' => ''];
 
         // Call the login method (which calls render internally)
-        $result =  $this->controller->submitHealthRecord(1,'Test Patient', 12, 'Male', 'Test allergies', 'Test Medication', $_FILES['attachment']);
+        $result =  $this->controller->submitHealthRecord(1, 'Test Patient', 12, 'Male', 'Test allergies', 'Test Medication', $_FILES['attachment']);
         $this->assertFalse($result);
     }
 

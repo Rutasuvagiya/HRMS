@@ -22,7 +22,8 @@ class Router
      * @param callable|array $handler The controller and method to call.
      * @return void
      */
-    public function add( $method,  $path, $handler): void {
+    public function add($method, $path, $handler): void
+    {
         $this->routes[] = [
             'method'  => strtoupper($method),
             'path'    => trim($path, '/'),
@@ -37,19 +38,20 @@ class Router
      * @param string $requestMethod The HTTP method of the request.
      * @return void
      */
-    public function dispatch(string $requestUri, string $requestMethod): void {
-       
+    public function dispatch(string $requestUri, string $requestMethod): void
+    {
+
         $requestPath = trim(parse_url($requestUri, PHP_URL_PATH), '/');
         $requestMethod = strtoupper($requestMethod);
 
-        
+
         foreach ($this->routes as $route) {
             if ($route['method'] === $requestMethod && $route['path'] === $requestPath) {
                 // If the handler is a callable function, execute it
                 if (is_callable($route['handler'])) {
                     call_user_func($route['handler']);
                     return;
-                } 
+                }
                 // If the handler is an array, it represents a Controller and Method
                 elseif (is_array($route['handler'])) {
                     [$controllerName, $method] = $route['handler'];

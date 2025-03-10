@@ -10,13 +10,13 @@
 <body class="flexbody">
     <div class="login-container">
         <h2>Login</h2>
-        <?php if (!empty($generalMessage)): ?>
+        <?php if (!empty($generalMessage)) : ?>
             <p class="general-error"><?= $generalMessage ?></p>
         <?php endif; ?>
         <form action="/login" method="POST">
             <label for="username">Username:</label>
             <span class="error"><?= $error['username'] ?? '' ?></span>
-            <input type="text" id="username" name="username" value="<?= htmlspecialchars($_POST['username']??'') ?>"  required>
+            <input type="text" id="username" name="username" value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"  required>
 
             <label for="password">Password:</label>
             <span class="error"><?= $error['password'] ?? '' ?></span>

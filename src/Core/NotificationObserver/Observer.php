@@ -1,4 +1,5 @@
 <?php
+
 namespace HRMS\Observers;
 
 /**
@@ -6,7 +7,8 @@ namespace HRMS\Observers;
  *
  * Defines the contract for all observers in the notification system.
  */
-interface Observer {
+interface Observer
+{
     /**
      * Receives update notifications from the subject.
      *
@@ -15,4 +17,3 @@ interface Observer {
      */
     public function update(string $message);
 }
-?>

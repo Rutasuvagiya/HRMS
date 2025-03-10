@@ -1,4 +1,5 @@
 <?php
+
 namespace HRMS\Core;
 
 use HRMS\Observers\NotificationSystem;
@@ -13,31 +14,30 @@ use HRMS\Core\Session;
  * centralized session based handler. established once and reused across the application.
  *
  */
-class Notifier {
+class Notifier
+{
     private $session;
     private static $instance = null;
 
     /**
      * Add new notification to observer's session.
-     * 
+     *
      * @param string $message Notification message to store in session
      * @return void
      */
-    public function addNotification($message) {
-       
+    public function addNotification($message)
+    {
+
         // Create notification system
         $notificationSystem = new NotificationSystem();
-
-        // Add observers
+// Add observers
         $notificationSystem->addObserver(new PushNotification());
-
-        //Add message to Ober
+//Add message to Ober
         $notificationSystem->notifyObservers($message);
-
-
     }
 
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (self::$instance === null) {
             self::$instance = new Notifier();
         }
@@ -51,6 +51,4 @@ class Notifier {
         $messages = explode(':::', rtrim($message, ':::'));
         echo json_encode($messages);
     }
-
 }
-?>

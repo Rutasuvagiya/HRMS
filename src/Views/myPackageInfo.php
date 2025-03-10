@@ -2,7 +2,7 @@
 
 <div class="health-container">
 <h1>My Package</h1>
-<?php if (!empty($generalMessage)): ?>
+<?php if (!empty($generalMessage)) : ?>
     <p class="general-error"><?= $generalMessage ?></p>
 <?php endif; ?>
 <p>Package Name: <?= $records['name']?></p>

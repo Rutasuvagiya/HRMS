@@ -34,9 +34,6 @@ class AdminControllerTest extends TestCase
 
         $this->sessionMock->method('checkSession')
         ->willReturn('true');
-       
-        // Mock dependencies
-        $this->healthRecordServiceMock = $this->createMock(AdminService::class);
 
         // Create a partial mock for UserController
         $this->controller = $this->getMockBuilder(AdminController::class)
@@ -48,8 +45,6 @@ class AdminControllerTest extends TestCase
         $this->controller->expects($this->once())
             ->method('render')
             ->willReturn(true);
-
-       
     }
 
     public function testGetAdminDashboardData()

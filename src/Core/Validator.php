@@ -1,4 +1,5 @@
 <?php
+
 namespace HRMS\core;
 
 /**
@@ -6,7 +7,8 @@ namespace HRMS\core;
  *
  * Handles input validation for forms in system.
  */
-class Validator {
+class Validator
+{
     /**
      * @var array Stores validation errors.
      */
@@ -18,18 +20,20 @@ class Validator {
      * @param array $requiredFields - List of required fields with label and value pair
      * @return bool - Returns true if all required fields are present and not empty
      */
-    public function validateRequiredFields($requiredFields): bool {
-        
+    public function validateRequiredFields($requiredFields): bool
+    {
+
         foreach ($requiredFields as $key => $value) {
             if (!isset($value) || trim($value) === '') {
-               $this->errors[$key] = "This field is required.";
+                $this->errors[$key] = "This field is required.";
             }
         }
         return empty($this->errors);
     }
 
 
-    public function validateName($name, $label): bool {
+    public function validateName($name, $label): bool
+    {
         if (!preg_match("/^[a-zA-Z0-9_\-]{3,50}$/", $name)) {
             $this->errors[$label] = "Invalid name. Name must be alphanumeric and at least 3 characters.";
             return false;
@@ -44,7 +48,8 @@ class Validator {
      * @param string $label The field name .
      * @return bool - Returns true if email is valid
      */
-    public function validateEmail($email, $label): bool {
+    public function validateEmail($email, $label): bool
+    {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->errors[$label] = "Invalid email format.";
             return false;
@@ -59,7 +64,8 @@ class Validator {
      * @param string $label The field name .
      * @return bool - Returns true if username is valid
      */
-    public function isUsernameUnique($value, $label): bool {
+    public function isUsernameUnique($value, $label): bool
+    {
         if ($value === true) {
             $this->errors[$label] = "Username already exists.";
             return false;
@@ -68,13 +74,14 @@ class Validator {
     }
 
     /**
-     * Check if input is integer 
+     * Check if input is integer
      *
      * @param string $value input field value
      * @param string $label The field name
      * @return bool - Returns true if input is integer
      */
-    public function isNumber($value, $label): bool{
+    public function isNumber($value, $label): bool
+    {
         if (!filter_var($value, FILTER_VALIDATE_INT)) {
             $this->errors[$label] = "Please enter valid whole number.";
             return false;
@@ -83,13 +90,14 @@ class Validator {
     }
 
     /**
-     * Check if input is float/decimal 
+     * Check if input is float/decimal
      *
      * @param string $value input field value
      * @param string $label The field name
      * @return bool - Returns true if input is float
      */
-    public function isFloatNumber($value, $label): bool{
+    public function isFloatNumber($value, $label): bool
+    {
         if (!filter_var($value, FILTER_VALIDATE_INT)) {
             $this->errors[$label] = "Please enter valid $label.";
             return false;
@@ -106,7 +114,8 @@ class Validator {
      * @param string $label2  input confirm password field value
      * @return bool - Returns true if passwords are valid
      */
-    public function validatePassword($password, $confirmPassword, $label1, $label2): bool {
+    public function validatePassword($password, $confirmPassword, $label1, $label2): bool
+    {
         //check if lenght of password is less then 6 then return false
         if (strlen($password) < 6) {
             $this->errors[$label1] = "Password must be at least 6 characters.";
@@ -145,21 +154,21 @@ class Validator {
     public function validateAttachment($file, $lable)
     {
         //If file name is null- file is not attached then return true
-        if(!isset($file) || $file['name'] == ''){
+        if (!isset($file) || $file['name'] == '') {
             return true;
         }
         // Allowed file types
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'text/plain'];
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'txt'];
-        $maxFileSize = 2 * 1024 * 1024; // 2MB
+        $maxFileSize = 2 * 1024 * 1024;
+// 2MB
 
         // Extract file details
          $fileName = basename($file['name']);
         $fileType = mime_content_type($file['tmp_name']);
         $fileSize = $file['size'];
         $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-
-        // Check if file type is allowed
+// Check if file type is allowed
         if (!in_array($fileType, $allowedTypes) || !in_array($fileExt, $allowedExtensions)) {
             $this->errors[$lable] = "Invalid file type. Only JPG, PNG, GIF, TXT and PDF are allowed.";
             return false;
@@ -171,7 +180,6 @@ class Validator {
             return false;
         }
         return true;
-
     }
 
     /**
@@ -179,9 +187,8 @@ class Validator {
      *
      * @return array Returns an array of error messages.
      */
-    public function getErrors(): array {
+    public function getErrors(): array
+    {
         return $this->errors;
     }
-
-   
 }

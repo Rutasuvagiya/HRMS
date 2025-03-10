@@ -1,4 +1,5 @@
 <?php
+
 namespace HRMS\Controllers;
 
 use HRMS\Core\Controller;
@@ -8,31 +9,32 @@ use HRMS\Core\Session;
 
 /**
  * Class PackageController
- * 
+ *
  * Handles package data. Insert, update, retrieve packages
  */
-class PackageController  extends Controller {
+class PackageController extends Controller
+{
     private PackageService $service;
     private $session;
     private $model;
-    
+
 
     /**
      * Constructor to initialize the Package model using a factory.
      * Initialize Package Service and session.
      * Check session is valid
      */
-    public function __construct($sessionMock = null) {
+    public function __construct($sessionMock = null)
+    {
         $this->model = ModelFactory::create('PackageModel');
         $this->service = new PackageService($this->model);
-        $this->session = $sessionMock != null ?$sessionMock : Session::getInstance();
+        $this->session = $sessionMock != null ? $sessionMock : Session::getInstance();
         $this->session->checkSession();
-        
     }
 
     /**
      * Render add package screen for user inputs
-     * 
+     *
      * @return void
      */
     public function addPackage()
@@ -47,42 +49,37 @@ class PackageController  extends Controller {
     {
         //expected inputs labels
         $arrExpected = ['name', 'price', 'validity'];
-        
-        //Get value of each inputs in variable named label(eg.  $username = 'test')
-        foreach($arrExpected as $value)
-        {
-            $input[$value] = $$value = $_POST[$value]??'';
+//Get value of each inputs in variable named label(eg.  $username = 'test')
+        foreach ($arrExpected as $value) {
+            $input[$value] = $$value = $_POST[$value] ?? '';
         }
 
-        try{
-            //call savePackage function to validate inputs and insert record in db
-            if($this->service->savePackage($name, $price, $validity)) {
+        try {
+//call savePackage function to validate inputs and insert record in db
+            if ($this->service->savePackage($name, $price, $validity)) {
                 header('Location: viewPackages');
                 return true;
                 exit;
             } else {
                 $error = $this->service->getErrors();
-                $error['input'] =$input;
-                
+                $error['input'] = $input;
                 $this->render('addRecords', $error);
                 return false;
             }
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
-      
     }
 
     /**
      * Get active package details for logged in user
-     * 
+     *
      * @return void
      */
     public function getUserPackage()
     {
         $packageRecords = $this->model->getUserPackageList();
-        
-        $this->render('myPackageInfo', ['records'=>$packageRecords]);
+        $this->render('myPackageInfo', ['records' => $packageRecords]);
     }
 
     /**
@@ -93,32 +90,26 @@ class PackageController  extends Controller {
 
         $userId = $this->session->get('userID');
         $packageId = $_POST['package'] ?? '';
-        
-        try{
-            //call upgradePackage function to validate inputs and update record in db
-            if ($packageId !='' && $this->service->upgradePackage($userId, $packageId)) {
+        try {
+        //call upgradePackage function to validate inputs and update record in db
+            if ($packageId != '' && $this->service->upgradePackage($userId, $packageId)) {
                 header('Location: viewMyPackage');
                 return true;
                 exit;
             } else {
                 $error = $this->service->getErrors();
-                
                 $this->render('upgradePackageForm', $error);
                 return false;
             }
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
-    
     }
 
     // Display available packages
-    public function showUpgradeForm() {
+    public function showUpgradeForm()
+    {
         $packages = $this->model->getPackageList();
- 
-        $this->render('upgradePackageForm', ['records'=>$packages]);
+        $this->render('upgradePackageForm', ['records' => $packages]);
     }
-
-    
 }
-

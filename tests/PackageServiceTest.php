@@ -1,4 +1,5 @@
 <?php
+
 namespace HRMS\Tests;
 
 use HRMS\Services\PackageService;
@@ -10,13 +11,11 @@ class PackageServiceTest extends TestCase
 {
     private $packageService;
     private $packageModelMock;
-
     protected function setUp(): void
     {
         // Create a mock for PackageModel
         $this->packageModelMock = $this->createMock(PackageModel::class);
-
-        // Inject the mock into PackageService
+    // Inject the mock into PackageService
         $this->packageService = new PackageService($this->packageModelMock);
     }
 
@@ -60,11 +59,10 @@ class PackageServiceTest extends TestCase
 
     public function testUpdatePackageSuccess()
     {
-        $packages[]= array('validity'=>10);
+        $packages[] = array('validity' => 10);
         $this->packageModelMock->method('getPackageList')->willReturn($packages);
         $this->packageModelMock->method('upgradePackage')->willReturn(false);
-
-        $this->assertFalse($this->packageService->upgradePackage(1,2));
+        $this->assertFalse($this->packageService->upgradePackage(1, 2));
     }
 
     public function getErrors()

@@ -3,13 +3,15 @@
 use PHPUnit\Framework\TestCase;
 use HRMS\Models\UserModel;
 
-class UserModelTest extends TestCase {
+class UserModelTest extends TestCase
+{
     private $mockPDO;
     private $mockStatement;
     private $userModel;
     private $userModelMock;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         /// Create PDO and Statement Mocks
         $this->mockPDO = $this->createMock(PDO::class);
         $this->mockStatement = $this->createMock(PDOStatement::class);
@@ -22,35 +24,37 @@ class UserModelTest extends TestCase {
     }
 
     //Test registration successful
-    public function testRegisterUser() {
+    public function testRegisterUser()
+    {
         $this->mockStatement->method('execute')->willReturn(true);
-        $result = $this->userModel->register("test",  "password123", "test@example.com");
+        $result = $this->userModel->register("test", "password123", "test@example.com");
 
         // Ensure that registration is successful (true)
         $this->assertTrue($result);
     }
 
     //Test cache part of registration
-    public function testRegistrationFailed() {
+    public function testRegistrationFailed()
+    {
         // Simulate PDO throwing a PDOException when prepare() is called
         $this->mockPDO->method('prepare')->willThrowException(new PDOException("Error: Connection failed"));
 
         // Expect the Exception to be thrown
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Error: Connection failed");
-      
 
-        $result = $this->userModel->register("test",  "password123", "test@example.com");
 
+        $result = $this->userModel->register("test", "password123", "test@example.com");
     }
 
     //Test patient login
-    public function testPatientLogin() {
-        
+    public function testPatientLogin()
+    {
+
         $name = "test";
         $password = "password123";
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-        
+
         // Mock fetch result (fake user data)
         $this->mockStatement->method('fetch')->willReturn([
             'id' => 1,
@@ -67,13 +71,14 @@ class UserModelTest extends TestCase {
         $this->assertTrue($result);
     }
 
-    //Test admin login 
-    public function testAdminLogin() {
-        
+    //Test admin login
+    public function testAdminLogin()
+    {
+
         $name = "test";
         $password = "password123";
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-        
+
         // Mock fetch result (fake user data)
         $this->mockStatement->method('fetch')->willReturn([
             'id' => 1,
@@ -90,12 +95,13 @@ class UserModelTest extends TestCase {
         $this->assertTrue($result);
     }
 
-    //Test invalid creds 
-    public function testFailedLogin() {
+    //Test invalid creds
+    public function testFailedLogin()
+    {
 
         $name = "test";
         $password = "password123";
-        
+
         // Mock fetch result (fake user data)
         $this->mockStatement->method('fetch')->willReturn([
             'id' => 1,
@@ -110,11 +116,11 @@ class UserModelTest extends TestCase {
         $result = $this->userModel->login($name, $password);
 
         $this->assertFalse($result);
-
     }
 
     //Test cache section of login
-    public function testLoginException() {
+    public function testLoginException()
+    {
 
         // Simulate PDO throwing a PDOException when prepare() is called
         $this->mockPDO->method('prepare')->willThrowException(new PDOException("Error: Connection failed"));
@@ -122,12 +128,12 @@ class UserModelTest extends TestCase {
         // Expect the Exception to be thrown
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Error: Connection failed");
-         $this->userModel->login("test",  "password123");
-
+         $this->userModel->login("test", "password123");
     }
 
     //Test username is already exists true scenario
-    public function testUsernameExists() {
+    public function testUsernameExists()
+    {
         $name = "test";
 
         // Simulate a user record found
@@ -142,7 +148,8 @@ class UserModelTest extends TestCase {
     }
 
     //Test valid name of isUsernameTaken
-    public function testUsernameDoesNotExist() {
+    public function testUsernameDoesNotExist()
+    {
         $name = "testInvalid";
 
         // Simulate no user found
@@ -157,7 +164,8 @@ class UserModelTest extends TestCase {
     }
 
     //Test cache part of isUsernameTaken
-    public function testUsernameDatabaseException() {
+    public function testUsernameDatabaseException()
+    {
         $name = "testExeption";
 
         // Simulate a database error
@@ -169,7 +177,3 @@ class UserModelTest extends TestCase {
         $this->userModel->isUsernameTaken($name);
     }
 }
-
-
-
-

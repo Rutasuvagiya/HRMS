@@ -25,19 +25,22 @@ class DBConnection
     // Private constructor to prevent direct instantiation
     private function __construct()
     {
-       
+
         $this->host = 'localhost';
         $this->dbname = 'HRMS';
         $this->username = 'root';
         $this->password = '';
-        
     }
 
     // Private clone method to prevent cloning
-    private function __clone() {}
+    private function __clone()
+    {
+    }
 
     // Private wakeup method to prevent unserializing
-    private function __wakeup() {}
+    private function __wakeup()
+    {
+    }
 
     // Public method to get the single instance of the class
     public static function getInstance(): PDO
@@ -47,7 +50,7 @@ class DBConnection
             try {
                 //call constructor method to get properties of DB connection
                 $dbObj = new static();
-               
+
                 //Set DB connection instance in static variable $instance
                 self::$instance = new PDO(
                     "mysql:host=" . $dbObj->host . ";dbname=" . $dbObj->dbname,
@@ -64,4 +67,3 @@ class DBConnection
         return self::$instance;
     }
 }
-

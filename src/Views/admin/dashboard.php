@@ -11,7 +11,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($package as $record): ?>
+                <?php foreach ($package as $record) : ?>
                 <tr>
                     <td><?= $record['name'] ?></td>
                     <td><?= $record['price'] ?></td>
@@ -39,18 +39,18 @@
             </thead>
             <tbody>
                 <!-- Sample data rows -->
-                <?php foreach ($records as $record): ?>
+                <?php foreach ($records as $record) : ?>
                 <tr>
                     <td><?= $record['patient_name'] ?></td>
                     <td><?= $record['age'] ?></td>
                     <td><?= $record['gender'] ?></td>
                     <td><?= $record['allergies'] ?></td>
                     <td><?= $record['medications'] ?></td>
-                    <td><?php if (!empty($record['attachment'])): ?>
+                    <td><?php if (!empty($record['attachment'])) : ?>
                 <a href="<?= htmlspecialchars($record['attachment']) ?>" target="_blank">View</a>
-            <?php else: ?>
+                        <?php else : ?>
                 No Attachment
-            <?php endif; ?></td>
+                        <?php endif; ?></td>
                     <td><?= date('Y-m-d H:i:s', strtotime($record['created_at']));?></td>
                     
                 </tr>

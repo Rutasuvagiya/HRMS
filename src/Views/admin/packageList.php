@@ -14,7 +14,7 @@
             </thead>
             <tbody>
                 <!-- Sample data rows -->
-                <?php foreach ($records as $record): ?>
+                <?php foreach ($records as $record) : ?>
                 <tr>
                     <td><?= $record['name'] ?></td>
                     <td><?= $record['price'] ?></td>

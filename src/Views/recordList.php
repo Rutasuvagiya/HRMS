@@ -2,7 +2,7 @@
     <div class="dashboard-container">
 
         <h1>Health Records</h1>
-        <?php if (!empty($generalMessage)): ?>
+        <?php if (!empty($generalMessage)) : ?>
             <p class="general-error"><?= $generalMessage ?></p>
         <?php endif; ?>
         <a href="/addRecord" class="linkButton">Add new Record</a><br/><br/>
@@ -19,31 +19,26 @@
                 </tr>
             </thead>
             <tbody>
-                <?php if(count($records)>0)
-                {
-
-                ?>
-                <?php foreach ($records as $record): ?>
+                <?php if (count($records) > 0) {
+                    ?>
+                    <?php foreach ($records as $record) : ?>
                 <tr>
                     <td><?= $record['patient_name'] ?></td>
                     <td><?= $record['age'] ?></td>
                     <td><?= $record['gender'] ?></td>
                     <td><?= $record['allergies'] ?></td>
                     <td><?= $record['medications'] ?></td>
-                    <td><?php if (!empty($record['attachment'])): ?>
+                    <td><?php if (!empty($record['attachment'])) : ?>
                         <a href="<?= htmlspecialchars($record['attachment']) ?>" target="_blank">View</a>
-                    <?php else: ?>
+                        <?php else : ?>
                         No Attachment
-                    <?php endif; ?></td>
+                        <?php endif; ?></td>
                     <td><a href="/editRecord?id=<?= $record['id'] ?>">Edit</a></td>
                 </tr>
-                <?php endforeach; 
-                
-                    }
-                    else
-                    {
-                        echo "<tr><td colspan='7' style='text-align: center;'>No Records Found.</td></tr>";
-                    }?>
+                    <?php endforeach;
+                } else {
+                    echo "<tr><td colspan='7' style='text-align: center;'>No Records Found.</td></tr>";
+                }?>
                 
                 <!-- Additional rows can be added here -->
             </tbody>

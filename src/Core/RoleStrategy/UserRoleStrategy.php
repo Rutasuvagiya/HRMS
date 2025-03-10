@@ -1,13 +1,14 @@
 <?php
+
 namespace HRMS\Core;
 
 /**
  * Interface UserRoleStrategy
- * 
+ *
  * Defines a method for getting the dashboard view.
  */
-interface UserRoleStrategy {
-    
+interface UserRoleStrategy
+{
     /**
     * Get the dashboard view for the specific role.
     *
@@ -15,4 +16,3 @@ interface UserRoleStrategy {
     */
     public function getDashboard();
 }
-?>

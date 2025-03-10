@@ -1,4 +1,5 @@
 <?php
+
 namespace HRMS\Observers;
 
 /**
@@ -6,7 +7,8 @@ namespace HRMS\Observers;
  *
  * Implements the Observer pattern for managing notifications.
  */
-class NotificationSystem {
+class NotificationSystem
+{
     //Stores the list of registered observers.
     private $observers = [];
 
@@ -16,7 +18,8 @@ class NotificationSystem {
      * @param Observer $observer The observer instance to be added.
      * @return void
      */
-    public function addObserver(Observer $observer) {
+    public function addObserver(Observer $observer)
+    {
         $this->observers[] = $observer;
     }
 
@@ -26,7 +29,8 @@ class NotificationSystem {
      * @param string $message message to deliver to all the observers.
      * @return void
      */
-    public function notifyObservers(string $message) {
+    public function notifyObservers(string $message)
+    {
         foreach ($this->observers as $observer) {
             $observer->update($message);
         }
