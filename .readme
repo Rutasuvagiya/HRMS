@@ -1,0 +1,23 @@
+Health Record Management System (HRMS)
+
+Overview
+The HRMS is a PHP-based web application designed to manage login, register, patient health records and admin log functionality. It follows the MVC architecture and incorporates design patterns for better scalability and maintainability.
+
+Installation Guide
+1. **Clone the Repository:**
+   git clone https://github.com/Rutasuvagiya/HRMS.git
+   cd HRMS
+
+
+2. **Install Dependencies:**
+   composer install
+   
+4. **Import Database:**
+    Import the `hrms.sql` file into MySQL.
+
+5. **Start Development Server:**
+   php -S localhost:8000 -t public
+
+
+6. **Access the Application:**
+   - Open `http://localhost:8000` in your browser.
