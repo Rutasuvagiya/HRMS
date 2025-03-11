@@ -13,6 +13,9 @@
         <?php if (!empty($generalMessage)) : ?>
             <p class="general-error"><?= $generalMessage ?></p>
         <?php endif; ?>
+        <?php if (!empty($error)): ?>
+            <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
+        <?php endif; ?>
         <form action="/login" method="POST">
             <label for="username">Username:</label>
             <span class="error"><?= $error['username'] ?? '' ?></span>

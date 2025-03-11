@@ -6,6 +6,8 @@ use HRMS\Core\Controller;
 use HRMS\Services\UserService;
 use HRMS\Factories\ModelFactory;
 use HRMS\Core\Session;
+use Exception;
+
 
 /**
  * Class UserController
@@ -24,6 +26,7 @@ class UserController extends Controller
      */
     public function __construct($serviceMock = null)
     {
+        
         $this->model = ModelFactory::create('UserModel');
         $this->service = !is_null($serviceMock) ? $serviceMock : new UserService($this->model);
         ;
@@ -34,7 +37,7 @@ class UserController extends Controller
     /**
      * Get user inputs from register screen and Registers a new user.
      *
-     * @return void
+     * @return bool true if success, else false
      */
     public function registerUser()
     {
@@ -59,7 +62,9 @@ class UserController extends Controller
                 return false;
             }
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            $error = $e->getMessage();
+        
+             $this->render('register', ['error' => $error]);
         }
     }
 
@@ -77,7 +82,7 @@ class UserController extends Controller
     /**
      * get user inputs and Logs in a user and starts a session.
      *
-     * @return void
+     * @return bool true if success, else false
      */
     public function loginUser()
     {
@@ -91,18 +96,20 @@ class UserController extends Controller
         }
 
         try {
-//call login function to validate inputs and insert record in db
+            //call login function to validate inputs and insert record in db
             if ($this->service->login($username, $password)) {
                 $dashboard = $this->service->getDashboard();
                 header("Location:$dashboard");
                 exit;
             } else {
-                $error = $this->service->getErrors();
-                $this->render('login', $error);
-                return false;
+                throw new Exception("Invalid credentials", 401);
+               // $error = $this->service->getErrors();
+               // $this->render('login', $error);
+               // return false;
             }
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            $error = $e->getMessage();
+             $this->render('login', ['error' => $error]);
         }
     }
 

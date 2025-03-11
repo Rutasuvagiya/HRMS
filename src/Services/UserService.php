@@ -6,6 +6,7 @@ use HRMS\Core\Validator;
 use HRMS\Core\Notifier;
 use HRMS\Core\Session;
 use HRMS\Factories\ModelFactory;
+use Exception;
 
 /**
  * Class UserService

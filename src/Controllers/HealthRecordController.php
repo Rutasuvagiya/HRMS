@@ -6,6 +6,7 @@ use HRMS\Core\Controller;
 use HRMS\Services\HealthRecordService;
 use HRMS\Factories\ModelFactory;
 use HRMS\Core\Session;
+use Exception;
 
 /**
  * Class HealthRecordController
@@ -33,6 +34,8 @@ class HealthRecordController extends Controller
 
     /**
      * Get health record inputs from front user and save
+     * 
+     * @return bool true if success, else false
      */
     public function submitHealthRecord()
     {
@@ -55,24 +58,28 @@ class HealthRecordController extends Controller
                 return false;
             }
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            $error = $e->getMessage();
+            $this->render('addRecords', ['error' => $error]);
+            return false;
         }
     }
 
      /**
      * Get Health records for logged in user
      *
-     * @return void
+     * @return bool true if success, else false
      */
     public function getUserWiseHealthRecords()
     {
         try {
-//call getUserWiseHealthRecords function get health records
+            //call getUserWiseHealthRecords function get health records
             $healthRecords = $this->model->getUserWiseHealthRecords();
             $this->render('recordList', ['records' => $healthRecords]);
             return true;
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            $error = $e->getMessage();
+            $this->render('recordList', ['error' => $error]);
+            return false;
         }
     }
 
@@ -88,6 +95,8 @@ class HealthRecordController extends Controller
 
     /**
      * Get health record inputs from front user with record id to update
+     * 
+     * @return bool true if success, else false
      */
     public function editRecord()
     {
@@ -99,7 +108,8 @@ class HealthRecordController extends Controller
                 $this->render('addRecords', $error);
                 return true;
             } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
+                $error = $e->getMessage();
+                $this->render('addRecords', ['error' => $error]);
                 return false;
             }
         } else {

@@ -6,6 +6,7 @@ use HRMS\Core\Controller;
 use HRMS\Services\AdminService;
 use HRMS\Factories\ModelFactory;
 use HRMS\Core\Session;
+use Exception;
 
 /**
  * Class AdminController
@@ -18,6 +19,7 @@ class AdminController extends Controller
     private $healthRecordModel;
     private $adminModel;
     private $packageModel;
+    private $session;
 
     /**
      * Constructor to initialize the Health Record model, Admin model, Package model using a factory.
@@ -40,7 +42,7 @@ class AdminController extends Controller
     /**
      * Get list of top 10 health records and packages for dashboard
      *
-     * @return void|string error
+     * @return  bool true if success, else false
      */
     public function getAdminDashboardData()
     {
@@ -52,7 +54,8 @@ class AdminController extends Controller
             $this->render('admin/dashboard', ['records' => $healthRecords, 'package' => $packageRecords]);
             return true;
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            $error = $e->getMessage();
+            $this->render('admin/dashboard', ['error' => $error]);
             return false;
         }
     }
@@ -60,7 +63,7 @@ class AdminController extends Controller
     /**
      * Get list of all the packages to display on admin panel
      *
-     * @return void|string error
+     * @return  bool true if success, else false
      */
     public function getPackages()
     {
@@ -70,15 +73,17 @@ class AdminController extends Controller
             $this->render('admin/packageList', ['records' => $packageRecords]);
             return true;
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            $error = $e->getMessage();
+            $this->render('admin/packageList', ['error' => $error]);
             return false;
+            
         }
     }
 
     /**
      * Get Health records of all the patients
      *
-     * @return void|string error
+     * @return bool true if success, else false
      */
     public function getAllPatientRecords()
     {
@@ -88,7 +93,8 @@ class AdminController extends Controller
             $this->render('admin/viewRecords', ['records' => $healthRecords]);
             return true;
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            $error = $e->getMessage();
+            $this->render('admin/viewRecords', ['error' => $error]);
             return false;
         }
     }

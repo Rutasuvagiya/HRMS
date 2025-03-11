@@ -8,6 +8,7 @@ use HRMS\Core\UserRoleStrategy;
 use HRMS\Core\AdminRole;
 use HRMS\Core\PatientRole;
 use PDO;
+use Exception;
 
 /**
  * Class UserModel
@@ -62,23 +63,27 @@ class UserModel
     public function login(string $username, string $password): bool
     {
         try {
-// Fetch user details
+            // Fetch user details
             $statement = $this->dbConnection->prepare("SELECT id,role, password FROM users WHERE username = :username");
             $statement->execute(['username' => $username]);
             $user = $statement->fetch();
-// Verify password
+            // Verify password
             if ($user && password_verify($password, $user['password'])) {
-//Start session and store user data in session
+                //Start session and store user data in session
                 $this->session = Session::getInstance();
                 $this->session->set('userID', $user['id']);
                 $this->session->set('role', $user['role']);
-//set user role using strategy pattern to get role wise dashboard
+                //set user role using strategy pattern to get role wise dashboard
                 $this->setRole($user['role']);
                 return true;
             }
+            else
+            {
+                return false;
+            }
             return false;
         } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
+            throw new Exception("Database error: " . $e->getMessage(), 500);
         }
     }
 

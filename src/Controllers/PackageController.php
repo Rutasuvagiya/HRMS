@@ -6,6 +6,7 @@ use HRMS\Core\Controller;
 use HRMS\Services\PackageService;
 use HRMS\Factories\ModelFactory;
 use HRMS\Core\Session;
+use Exception;
 
 /**
  * Class PackageController
@@ -44,6 +45,8 @@ class PackageController extends Controller
 
     /**
      * Get new package inputs from admin and save
+     * 
+     * @return bool true if saved successfully else false
      */
     public function savePackage()
     {
@@ -55,11 +58,10 @@ class PackageController extends Controller
         }
 
         try {
-//call savePackage function to validate inputs and insert record in db
+            //call savePackage function to validate inputs and insert record in db
             if ($this->service->savePackage($name, $price, $validity)) {
                 header('Location: viewPackages');
                 return true;
-                exit;
             } else {
                 $error = $this->service->getErrors();
                 $error['input'] = $input;
@@ -67,7 +69,9 @@ class PackageController extends Controller
                 return false;
             }
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            $error = $e->getMessage();
+            $this->render('addRecords', ['error' => $error]);
+            return false;
         }
     }
 
@@ -84,6 +88,8 @@ class PackageController extends Controller
 
     /**
      * update package details for logged in user(user set in session)
+     * 
+     * @return bool true if success, else false
      */
     public function upgradePackage()
     {
@@ -102,7 +108,9 @@ class PackageController extends Controller
                 return false;
             }
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            $error = $e->getMessage();
+            $this->render('upgradePackageForm', ['error' => $error]);
+            return false;
         }
     }
 
